@@ -1,0 +1,18 @@
+This is the FHP lattice-gas cellular automaton (or FHP model), named after Frisch, Hasslacher, and Pomeau who introduced it in 1986.
+It's a successor to the earlier HPP model (Hardy, Pomeau, de Pazzis, 1973) — one of the earliest lattice-gas automata (LGA) and a precursor to the modern Lattice Boltzmann Method (LBM) used today in computational fluid dynamics. The core idea is that instead of solving the Navier-Stokes equations directly, you simulate individual "particles" moving and colliding on a discrete grid, and fluid-like behaviour emerges from simple local rules:
+
+Streaming — particles hop one cell per timestep in their direction of travel
+Collision — when particles meet, they scatter according to FHP-I rules (head-on and triple collisions)
+
+The key improvement over HPP is the hexagonal (triangular) lattice with 6 velocity directions (D2Q6) instead of HPP's square lattice with 4 directions (D2Q4). The 6-fold rotational symmetry of the hexagonal lattice is sufficient to recover isotropic Navier-Stokes behaviour at the macroscopic scale, whereas HPP's 4-fold symmetry is not.
+
+FHP-I collision rules:
+  - Triple collisions: (d0,d2,d4) <-> (d1,d3,d5)  [deterministic]
+  - Head-on collisions: d0<->d3, d1<->d4, d2<->d5  [stochastic, 50% each of two outputs]
+
+The specific reflection technique used here (flipping a particle's direction at a wall face before streaming) is called bounce-back boundary conditions, which is the standard no-slip wall treatment in both LGA and LBM simulations.
+
+demo1.py contains the interactive FHP simulation with:
+  - A central barrier with a gap (solid wall bounce-back)
+  - Outer wall bounce-back on all 4 domain boundaries
+  - Play/Pause, Reverse, and Reset controls
